@@ -122,8 +122,8 @@ class Random{
 	public:
 		Random():misses_comp(0), misses_cap(0), hits(0){}
 
-		int aleatorio(int menor, int maior) {
-  		    return rand()%(maior-menor+1) + menor;
+		int getRandom(int min, int max) {
+  		    return rand()%(max-min+1) + min;
 		}
 
 		void exe(int s, vector<int> words){
@@ -150,7 +150,7 @@ class Random{
                     cache.push_back((*i));
                 }
                 else{
-                	int random = aleatorio(0, (s-1));
+                	int random = getRandom(0, (s-1));
                     cout<<"\tmiss\tElemento trocado: "<< cache.at(random)<<'.'<<endl;
                     misses_cap++;
                     cache.at(random) = (*i);
