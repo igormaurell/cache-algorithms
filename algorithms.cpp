@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <cstdlib>
 
 using namespace std;
 class LRU{
@@ -110,8 +111,60 @@ class LFU{
             hits = misses_comp = misses_cap = 0;
 
         }
-
 };
+
+class Random{
+	private:
+		vector <int> cache;
+		int misses_comp;
+		int misses_cap;
+		int hits;
+	public:
+		Random():misses_comp(0), misses_cap(0), hits(0){}
+
+		int aleatorio(int menor, int maior) {
+  		    return rand()%(maior-menor+1) + menor;
+		}
+
+		void exe(int s, vector<int> words){
+			cout<<"\nExecutando Random..."<<endl;
+			vector<int>::iterator i, j;
+
+			bool found = false;
+			for(i = words.begin(); i!=words.end(); i++){
+				cout<< "Elemento: "<<(*i);
+                found = false;
+				for(j = cache.begin(); j!=cache.end(); j++){
+					if((*j)==(*i)){
+                        found = true;
+                    }
+				}
+				if(found){
+                    cout<<"\thit."<<endl;
+                    hits++;
+                    continue;
+                }
+                if(cache.size()!=s){
+                    cout<<"\tmiss\tElemento adicionado."<<endl;
+                    misses_comp++;
+                    cache.push_back((*i));
+                }
+                else{
+                	int random = aleatorio(0, (s-1));
+                    cout<<"\tmiss\tElemento trocado: "<< cache.at(random)<<'.'<<endl;
+                    misses_cap++;
+                    cache.at(random) = (*i);
+                }
+			}
+
+			cout<<"\nFinal da execucao. Resultados: "<<endl;
+            cout<<"-Hits: "<<hits<<endl;
+            cout<<"-Misses compulsorios: "<<misses_comp<<endl;
+            cout<<"-Misses de capacidade: "<<misses_cap<<endl;
+            hits = misses_comp = misses_cap = 0;
+		}
+};
+
 int main(){
     int size;
     vector<int> words;
@@ -127,4 +180,9 @@ int main(){
 
     LFU lfu;
     lfu.exe(size, words);
+
+    srand(time(NULL));
+    Random random;
+    random.exe(size, words);
+    
 }
