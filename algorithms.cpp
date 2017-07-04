@@ -13,7 +13,7 @@ class LRU{
         LRU():misses_comp(0), misses_cap(0), hits(0){}
 
         void exe(int s, vector<int> words){
-            cout<<"Executando LRU..."<<endl;
+            cout<<"\nExecutando LRU..."<<endl;
             vector<int>::iterator it;
             vector< pair<int, int> >::iterator jt, mt;
             bool found;
@@ -21,6 +21,7 @@ class LRU{
                 cout<<"Elemento: "<<(*it);
                 found = false;
                 mt = cache.begin();
+                
                 for(jt = cache.begin();jt!=cache.end();jt++){
                     if((*jt).first!=(*it)){
                         (*jt).second++;
@@ -58,6 +59,59 @@ class LRU{
         }
 };
 
+class LFU{
+    private:
+        vector< pair<int, int> > cache;
+        int misses_comp;
+        int misses_cap;
+        int hits;
+    public:
+        LFU():misses_comp(0), misses_cap(0), hits(0){}
+        void exe(int s, vector<int> words){
+            cout<<"\nExecutando LFU..."<<endl;
+            vector<int>::iterator i;
+            vector< pair<int, int> >::iterator j, min;
+            bool found;
+
+            for(i=words.begin(); i!=words.end(); i++){
+                cout<< "Elemento: "<<(*i);
+                found = false;
+                min = cache.begin();
+                for(j = cache.begin(); j!=cache.end(); j++){
+                    if((*j).first == (*i)){
+                        found = true;
+                        (*j).second++;
+                        if((*min).second > (*j).second){
+                            min = j;
+                        }
+                    }
+                }
+                if(found){
+                    cout<<"\thit."<<endl;
+                    hits++;
+                    continue;
+                }
+                if(cache.size()!=s){
+                    cout<<"\tmiss\tElemento adicionado."<<endl;
+                    misses_comp++;
+                    cache.push_back(make_pair((*i), 0));
+                }
+                else{
+                    cout<<"\tmiss\tElemento trocado: "<<(*min).first<<'.'<<endl;
+                    misses_cap++;
+                    *min = make_pair((*i), 0);
+                }
+            }
+
+            cout<<"\nFinal da execucao. Resultados: "<<endl;
+            cout<<"-Hits: "<<hits<<endl;
+            cout<<"-Misses compulsorios: "<<misses_comp<<endl;
+            cout<<"-Misses de capacidade: "<<misses_cap<<endl;
+            hits = misses_comp = misses_cap = 0;
+
+        }
+
+};
 int main(){
     int size;
     vector<int> words;
@@ -70,4 +124,7 @@ int main(){
     }
     LRU lru;
     lru.exe(size, words);
+
+    LFU lfu;
+    lfu.exe(size, words);
 }
