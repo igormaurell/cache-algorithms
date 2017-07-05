@@ -153,27 +153,6 @@ class FIFO {
                         pos_q.pop();
                     }
                 }
-                /*
-                if (found) {
-                    cout<<"\thit."<<endl;
-                    hits++;
-                } else {
-                    if(cache.size()!=s) {
-                        cache.push_back((*i));
-                        misses_comp++;
-                        cout<<"\tmiss\tElemento adicionado."<<endl;
-                    } else {
-                        cout << "\tmiss\tElemento trocado: " << (*first) << '.' << endl;
-                        misses_cap++;
-                        *first = *i;
-                        if (first == cache.end()) {
-                            first = cache.begin();
-                        } else {
-                            first++;
-                        }
-                    }
-                }
-                */
             }
             cout<<"\nFinal da execucao. Resultados: "<<endl;
             cout<<"-Hits: "<<hits<<endl;
