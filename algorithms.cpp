@@ -75,7 +75,7 @@ class LFU{
             bool found;
 
             for(i=words.begin(); i!=words.end(); i++){
-                cout<<"Elemento: "<<(*i);
+                cout<< "Elemento: "<<(*i);
                 found = false;
                 min = cache.begin();
                 for(j = cache.begin(); j!=cache.end(); j++){
