@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <utility>
 
 using namespace std;
@@ -74,7 +75,7 @@ class LFU{
             bool found;
 
             for(i=words.begin(); i!=words.end(); i++){
-                cout<< "Elemento: "<<(*i);
+                cout<<"Elemento: "<<(*i);
                 found = false;
                 min = cache.begin();
                 for(j = cache.begin(); j!=cache.end(); j++){
@@ -112,6 +113,76 @@ class LFU{
         }
 
 };
+
+class FIFO {
+    private:
+        vector<int> cache;
+        int misses_comp;
+        int misses_cap;
+        int hits;
+    public:
+        FIFO() : misses_comp(0), misses_cap(0), hits(0) {}
+        void exe(int s, vector<int> words) {
+            cout << "\nExecutando FIFO..." << endl;
+            vector<int>::iterator i;
+            vector<int>::iterator j;
+            queue<int> pos_q;
+            bool found;
+            for (i = words.begin(); i != words.end(); i++) {
+                cout << "Elemento: " << (*i);
+                found = false;
+                for (j = cache.begin(); j != cache.end(); j++) {
+                    if ((*j) == (*i)) {
+                        cout<<"\thit."<<endl;
+                        hits++;
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    if (cache.size() < s) {
+                        misses_comp++;
+                        cache.push_back(*i);
+                        pos_q.push(cache.size() - 1);
+                        cout << "\tmiss\tElemento adicionado. " << (cache.size() - 1) << endl;
+                    } else {
+                        misses_cap++;
+                        cout << "\tmiss\tElemento trocado: " << *(cache.begin() + pos_q.front()) << '.' << endl;
+                        *(cache.begin() + pos_q.front()) = *i;
+                        pos_q.push(pos_q.front());
+                        pos_q.pop();
+                    }
+                }
+                /*
+                if (found) {
+                    cout<<"\thit."<<endl;
+                    hits++;
+                } else {
+                    if(cache.size()!=s) {
+                        cache.push_back((*i));
+                        misses_comp++;
+                        cout<<"\tmiss\tElemento adicionado."<<endl;
+                    } else {
+                        cout << "\tmiss\tElemento trocado: " << (*first) << '.' << endl;
+                        misses_cap++;
+                        *first = *i;
+                        if (first == cache.end()) {
+                            first = cache.begin();
+                        } else {
+                            first++;
+                        }
+                    }
+                }
+                */
+            }
+            cout<<"\nFinal da execucao. Resultados: "<<endl;
+            cout<<"-Hits: "<<hits<<endl;
+            cout<<"-Misses compulsorios: "<<misses_comp<<endl;
+            cout<<"-Misses de capacidade: "<<misses_cap<<endl;
+            hits = misses_comp = misses_cap = 0;
+        }
+};
+
 int main(){
     int size;
     vector<int> words;
@@ -127,4 +198,7 @@ int main(){
 
     LFU lfu;
     lfu.exe(size, words);
+
+    FIFO fifo;
+    fifo.exe(size, words);
 }
